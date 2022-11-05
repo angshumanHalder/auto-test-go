@@ -1,0 +1,17 @@
+package {{.PkgName}}
+
+import (
+	"testing"
+)
+
+{{range $y, $x := .FnNames -}}
+
+func Test_{{$.PkgName}}_{{$x.Name}}(t *testing.T) {
+    tests := []struct {
+      name string{{range $i,$v := $x.Inputs}}
+      input{{$i}} {{$v}}{{end}}{{range $i,$v := $x.Outputs}}
+      expected{{$i}} {{$v}}{{end}}
+    }{}
+}
+
+{{end}}
