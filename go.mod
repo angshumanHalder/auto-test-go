@@ -1,4 +1,4 @@
-module github.com/go-test-generation
+module github.com/angshumanHalder/go-test-generation
 
 go 1.19
 
