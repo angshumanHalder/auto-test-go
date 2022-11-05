@@ -16,7 +16,7 @@ import (
 )
 
 var fileNames = [...]string{"generate-test.go", "go.mod", "go.sum", "_test.go"}
-var fileExts = [...]string{".txt", ".yml", ".env"}
+var excludeDirs = [...]string{".git"}
 
 type FNInfo struct {
 	Name    string
@@ -42,9 +42,15 @@ func FindDirs(path string) {
 	if err != nil {
 		log.Fatalf("unable to read dirs on current path")
 	}
+OUTER:
 	for _, entry := range dirs {
 		nextPath := filepath.Join(path, entry.Name())
 		if entry.IsDir() {
+			for _, dir := range excludeDirs {
+				if entry.Name() == dir {
+					continue OUTER
+				}
+			}
 			FindDirs(nextPath)
 		} else {
 			fileName := filepath.Base(nextPath)
@@ -83,13 +89,13 @@ func appendNewFunctionsToFile(testFileName string, fnNames []FNInfo) []FNInfo {
 func createTestFile(testFileName string, fnNames FunctionNames, appendToFile bool) {
 	var temp *template.Template
 	if appendToFile {
-		tmp, err := template.ParseFiles("functions.txt")
+		tmp, err := template.ParseFiles("./functions.txt")
 		if err != nil {
 			log.Fatalf("unable to parse template file: %v", err)
 		}
 		temp = tmp
 	} else {
-		tmp, err := template.ParseFiles("template.txt")
+		tmp, err := template.ParseFiles("./template.txt")
 		if err != nil {
 			log.Fatalf("unable to parse template file: %v", err)
 		}
@@ -113,12 +119,7 @@ func fileInExceptionList(file string) bool {
 			return true
 		}
 	}
-	for _, ext := range fileExts {
-		if filepath.Ext(file) == ext {
-			return true
-		}
-	}
-	return false
+	return filepath.Ext(file) != ".go"
 }
 
 func findFunctions(name string, path string) FunctionNames {
