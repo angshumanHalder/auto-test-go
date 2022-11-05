@@ -37,11 +37,7 @@ func (f VisitorFunc) Visit(n ast.Node) ast.Visitor {
 	return f(n)
 }
 
-func main() {
-	findDirs("./")
-}
-
-func findDirs(path string) {
+func FindDirs(path string) {
 	dirs, err := os.ReadDir(path)
 	if err != nil {
 		log.Fatalf("unable to read dirs on current path")
@@ -49,7 +45,7 @@ func findDirs(path string) {
 	for _, entry := range dirs {
 		nextPath := filepath.Join(path, entry.Name())
 		if entry.IsDir() {
-			findDirs(nextPath)
+			FindDirs(nextPath)
 		} else {
 			fileName := filepath.Base(nextPath)
 			if fileInExceptionList(fileName) {
