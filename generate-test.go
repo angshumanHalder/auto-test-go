@@ -88,18 +88,37 @@ func appendNewFunctionsToFile(testFileName string, fnNames []FNInfo) []FNInfo {
 
 func createTestFile(testFileName string, fnNames FunctionNames, appendToFile bool) {
 	var temp *template.Template
-	if appendToFile {
-		tmp, err := template.ParseFiles("github.com/angshumanHalder/auto-test-go/templates/functions.txt")
-		if err != nil {
-			log.Fatalf("unable to parse template file: %v", err)
-		}
-		temp = tmp
+	if !appendToFile {
+		temp = template.Must(template.New("testfile").Parse(`package {{.PkgName}}
+
+import "testing"
+
+{{range $y, $x := .FnNames -}}
+
+func Test_{{$.PkgName}}_{{$x.Name}}(t *testing.T) {
+  tests := []struct {
+    name string{{range $i,$v := $x.Inputs}}
+    input{{$i}} {{$v}}{{end}}{{range $i,$v := $x.Outputs}}
+    expected{{$i}} {{$v}}{{end}}
+  }{}
+}
+
+{{end}}
+`))
 	} else {
-		tmp, err := template.ParseFiles("github.com/angshumanHalder/auto-test-go/templates/template.txt")
-		if err != nil {
-			log.Fatalf("unable to parse template file: %v", err)
-		}
-		temp = tmp
+		temp = template.Must(template.New("functions").Parse(`
+{{range $y, $x := .FnNames -}}
+
+func Test_{{$.PkgName}}_{{$x.Name}}(t *testing.T) {
+  tests := []struct {
+    name string{{range $i,$v := $x.Inputs}}
+    input{{$i}} {{$v}}{{end}}{{range $i,$v := $x.Outputs}}
+    expected{{$i}} {{$v}}{{end}}
+  }{}
+}
+
+{{end}}
+`))
 	}
 	file, err := os.OpenFile(testFileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
