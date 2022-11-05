@@ -89,13 +89,13 @@ func appendNewFunctionsToFile(testFileName string, fnNames []FNInfo) []FNInfo {
 func createTestFile(testFileName string, fnNames FunctionNames, appendToFile bool) {
 	var temp *template.Template
 	if appendToFile {
-		tmp, err := template.ParseFiles("templates/functions.txt")
+		tmp, err := template.ParseFiles("github.com/angshumanHalder/auto-test-go/templates/functions.txt")
 		if err != nil {
 			log.Fatalf("unable to parse template file: %v", err)
 		}
 		temp = tmp
 	} else {
-		tmp, err := template.ParseFiles("templates/template.txt")
+		tmp, err := template.ParseFiles("github.com/angshumanHalder/auto-test-go/templates/template.txt")
 		if err != nil {
 			log.Fatalf("unable to parse template file: %v", err)
 		}
