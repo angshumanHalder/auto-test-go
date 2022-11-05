@@ -1,4 +1,4 @@
-module github.com/angshumanHalder/go-test-generation
+module github.com/angshumanHalder/auto-test-go
 
 go 1.19
 
