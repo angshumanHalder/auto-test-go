@@ -1,4 +1,4 @@
-package gotestgeneration
+package main
 
 import (
 	"fmt"
@@ -12,6 +12,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/alexflint/go-arg"
 	"golang.org/x/exp/slices"
 )
 
@@ -168,7 +169,6 @@ func findFunctions(name string, path string) FunctionNames {
 			}
 			funcNames.FnNames = append(funcNames.FnNames, fnInfo)
 		case *ast.File:
-			log.Println("file name, ", n.Name.Name)
 			funcNames.PkgName = n.Name.Name
 		}
 		return true
@@ -176,4 +176,13 @@ func findFunctions(name string, path string) FunctionNames {
 	ast.Inspect(file, findFns)
 
 	return funcNames
+}
+
+var args struct {
+	Path string `default:"./"`
+}
+
+func main() {
+	arg.MustParse(&args)
+	FindDirs(args.Path)
 }
