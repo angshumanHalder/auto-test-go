@@ -24,10 +24,13 @@ changelog:
     exclude:
       - "^docs:"
       - "^test:"
+
 brews:
-  goamd64: v3
-  tap:
-    owner: angshumanHalder
+  - name: myproject
+    goamd64: v3
+    tap:
+      owner: angshumanHalder
+      name: auto-test-go
     commit_author:
       name: angshumanHalder
       email: angshuman.halder243@gmail.com
